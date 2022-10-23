@@ -63,19 +63,18 @@ class Game:
         Besonders: nutzt check_regeln
         """
         new_board = []
-        nodes = self.get_nodes()
+        nodes = self.nodes
         for node in nodes:
             numneighbours = 0
             for nachbar in self.get_neighbours(node):
                 if nachbar in nodes:
                     numneighbours += 1
-                elif nachbar not in new_board + nodes and self.get_num_neighbours(nachbar) == 3:
+                elif nachbar not in new_board and self.get_num_neighbours(nachbar) == 3:
                     new_board.append(nachbar)
             if node not in new_board and numneighbours in [2, 3]:
                 new_board.append(node)
-        self.replace_nodes(new_board)
+        self.nodes = new_board
         self.iterations += 1
-        return new_board
 
     def replace_nodes(self, nodes) -> list:
         """ Ersetzt self.nodes durch nodes
