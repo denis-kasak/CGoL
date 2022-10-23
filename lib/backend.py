@@ -38,11 +38,9 @@ class Game:
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        nachbar_zellen = self.get_neighbours(node)
         # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
         #  und self.nodes (Knotenliste)
-        num_nachbarn = len(Game.get_list_intersection(nachbar_zellen, self.nodes))  # noqa: E501
-        return num_nachbarn
+        return len(list(filter(lambda x:x in self.get_neighbours(node), self.nodes)))
 
     def get_neighbours(self, node):
         """Gibt eine Liste aller Nachbarn zurück.
@@ -229,23 +227,6 @@ class Game:
         data = json.load(open(path, "r"))
         return data
 
-    @classmethod
-    def get_list_intersection(cls, list_a: list, list_b: list) -> list:
-        # TODO: NICHT ENTFERNEN, essenziell
-        # OPTIMIZE: Optimierung der Laufzeit? (alternative zur Iteration)
-        # NOTE: Wird bei testwelt denis.json 5403x aufgerufen in der ersten Iteration
-        """Gibt die Überschneidung zweier Listen zurück.
-
-        Kommentar: erzeugt die überschneidung zweier listen
-        Input: Name der Klasse, erste Liste, zweite Liste
-        Output: Überschneidung der Listen
-        Besonders: Keine Besonderheiten
-        """
-        if len(list_a) > len(list_b):
-            intersect = [item for item in list_b if item in list_a]
-        else:
-            intersect = [item for item in list_a if item in list_b]
-        return intersect
 
     @classmethod
     def remove_duplicates(cls, nodes):
