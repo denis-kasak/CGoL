@@ -26,6 +26,6 @@
 |update_board|aktualisiert das Bord mittels pygame.Display.flip()|self--Name der Instanz|Kein Output|:white_check_mark:|   |
 |show_board|zeichnet bei jedem Punkt ein 9*9 Rechteck|self--Name der Instanz,<br />Punkte als Knotenliste|Kein Output|:white_check_mark:|greift auf self.clear_board und self.update_board zu|
 |check_close|überprüft, ob der Close Button oder Escape Taste gedrückt wurde, wenn Ja schließen mit sys.exit()|self--Name der Instanz|Kein Output|:white_check_mark:|nutzt das sys Modul|
-|manipulate_point|Manipuliert einen Punkt, wenn Punkt vorhanden wird dieser Entfernt, wenn nicht wird ein PUnkt hinzugefuegt|self--Name der Instanz,<br />posX--X-Position des Mausklicks,<br />posY--y-Position des Mausklicks|Kein Output|:white_check_mark:|nutzt game.manipulate_point|
+|manipulate_node|Manipuliert einen Punkt, wenn Punkt vorhanden wird dieser Entfernt, wenn nicht wird ein PUnkt hinzugefuegt|self--Name der Instanz,<br />posX--X-Position des Mausklicks,<br />posY--y-Position des Mausklicks|Kein Output|:white_check_mark:|nutzt game.manipulate_node|
 |wait_keypress|Wartet auf einen Tastendruck und führt den entsprechenden Befehl aus|<self--Name der Instanz|Kein Output (aktuell für Debug zwecke)|:white_check_mark:|nutzt diverse sys und pygame Befehle|
 |mainloop|Mainloop des Programms, läuft bis zur Unterbrechung|self--Name der Instanz|Kein Output|:white_check_mark:|   |

@@ -2,7 +2,6 @@
 """Docstring beenden."""
 import json
 import os
-import time
 
 
 class Game:
@@ -38,8 +37,8 @@ class Game:
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        intersect = [item for item in self.get_neighbours(node) if item in self.nodes]
-        return len(intersect)
+        nachbarn = [item for item in self.get_neighbours(node) if item in self.nodes]
+        return len(nachbarn)
 
     def get_neighbours(self, node):
         """Gibt eine Liste aller Nachbarn zurück.
@@ -64,21 +63,21 @@ class Game:
         Besonders: nutzt check_regeln
         """
         new_board = []
-        nodes = self.get_points()
+        nodes = self.get_nodes()
         for node in nodes:
             numneighbours = 0
-            for zelle in self.get_neighbours(node):
-                if zelle in nodes:
+            for nachbar in self.get_neighbours(node):
+                if nachbar in nodes:
                     numneighbours += 1
-                elif zelle not in new_board + nodes and self.get_num_neighbours(zelle) == 3: 
-                    new_board.append(zelle)
+                elif nachbar not in new_board + nodes and self.get_num_neighbours(nachbar) == 3:
+                    new_board.append(nachbar)
             if node not in new_board and numneighbours in [2, 3]:
                 new_board.append(node)
-        self.replace_points(new_board)
+        self.replace_nodes(new_board)
         self.iterations += 1
         return new_board
 
-    def replace_points(self, nodes) -> list:
+    def replace_nodes(self, nodes) -> list:
         """ Ersetzt self.nodes durch nodes
 
         Kommentar: Erstzen der self.nodes durch nodes
@@ -90,7 +89,7 @@ class Game:
         self.nodes = Game.remove_duplicates(nodes)
         return self.nodes
 
-    def get_points(self) -> list:
+    def get_nodes(self) -> list:
         """Gibt die Knotenliste zurück.
 
         Kommentar: gibt die aktuelle Knotenliste aus
@@ -100,13 +99,13 @@ class Game:
         """
         return self.nodes
 
-    def deepcopy_points(self):
+    def deepcopy_nodes(self):
         res = []
         for node in self.nodes:
             res.append([int(node[0]), int(node[1])])
         return res
 
-    def add_point(self, x_koord: int, y_koord: int) -> list:
+    def add_node(self, x_koord: int, y_koord: int) -> list:
         """Fügt einen Punkt zur Knotenliste hinzu.
 
         Kommentar: Fuegt einen Punkt zur Knotenliste self.nodes hinzu
@@ -119,7 +118,7 @@ class Game:
             self.nodes.append([x_koord, y_koord])
         return self.nodes
 
-    def remove_point(self, x_koord, y_koord):
+    def remove_node(self, x_koord, y_koord):
         """Entfernt einen Punkt aus der Knotenliste.
 
         Kommentar: Entfernt einen Punkt aus der Knotenliste
@@ -133,7 +132,7 @@ class Game:
             self.nodes.remove([x_koord, y_koord])
         return self.nodes
 
-    def manipulate_point(self, x_koord: int, y_koord: int) -> bool:
+    def manipulate_node(self, x_koord: int, y_koord: int) -> bool:
 
         """Siehe Kommentar.
 
@@ -145,10 +144,10 @@ class Game:
         """
         if [x_koord, y_koord] in self.nodes:
             # TODO ist in Coverage nicht eingetreten
-            self.remove_point(x_koord, y_koord)
+            self.remove_node(x_koord, y_koord)
             res = False
         else:
-            self.add_point(x_koord, y_koord)
+            self.add_node(x_koord, y_koord)
             res = True
         return res
 
@@ -177,7 +176,7 @@ class Game:
         if filename:
             data = Game.load_premade(filename)
         else:
-            pth = os.path.join(os.path.dirname(__file__),"..", "premade", "premade.json")
+            pth = os.path.join(os.path.dirname(__file__), "..", "premade", "premade.json")
             data = Game.load_premade(pth)
         self.premade = Game.merge_dict(self.premade, data)
         return data
@@ -198,7 +197,7 @@ class Game:
         for point in to_add:
             new_point.append([point[0] + pos_x, point[1] + pos_y])
         for point in new_point:
-            self.add_point(point[0], point[1])
+            self.add_node(point[0], point[1])
         return new_point
 
     @classmethod
@@ -225,7 +224,6 @@ class Game:
         """
         data = json.load(open(path, "r"))
         return data
-
 
     @classmethod
     def remove_duplicates(cls, nodes):

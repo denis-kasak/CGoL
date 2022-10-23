@@ -74,7 +74,7 @@ class Display:  # Zu Display ändern
         frage = Label(fenster, text="Wie soll der Name der Form sein?")
         namefeld = Entry(fenster, bg="goldenrod", fg="black")
         weiterbutton = Button(fenster, bg="goldenrod", fg="black", text="In Datei Speichern", command=lambda: [
-            Display.weltalsformspeichern(self.game.deepcopy_points(), namefeld.get()), fenster.destroy()])
+            Display.weltalsformspeichern(self.game.deepcopy_nodes(), namefeld.get()), fenster.destroy()])
         frage.grid(row=0, column=0, sticky="nesw")
         namefeld.grid(row=1, column=0, padx=5, pady=5, sticky="nesw")
         weiterbutton.grid(row=2, column=0, padx=5, pady=5, sticky="nesw")
@@ -236,7 +236,7 @@ class Display:  # Zu Display ändern
         self.fortsetzen.grid(row=1, sticky=' nesw', padx=5, pady=5)
 
         self.save_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt speichern",
-                                  command=lambda: [self.save_file(self.game.get_points(), False)])
+                                  command=lambda: [self.save_file(self.game.get_nodes(), False)])
         self.save_button.grid(row=2, sticky=' nesw', padx=5, pady=5)
 
         self.save_as_premade_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt als Form speichern",
@@ -304,7 +304,7 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Aktualisiert das Bord
         """
-        points = points or self.game.get_points()
+        points = points or self.game.get_nodes()
         self.clear_board()
         for point in points:
             x_koord = (point[0] * 10) + 1
@@ -332,7 +332,7 @@ class Display:  # Zu Display ändern
         point_x = (node_x * 10) + 1
         point_y = (node_y * 10) + 1
         if self.curr_place_mode == "Zelle":
-            exist = self.game.manipulate_point(node_x, node_y)
+            exist = self.game.manipulate_node(node_x, node_y)
             if exist:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
             else:
@@ -399,12 +399,12 @@ class Display:  # Zu Display ändern
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
                     if self.curr_place_mode == "Spur":
-                        self.game.add_point(pos_y, pos_x)
+                        self.game.add_node(pos_y, pos_x)
                         pygame.draw.rect(self.display, self.black,
                                          pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
                     elif self.curr_place_mode == "Radieren":
-                        self.game.remove_point(pos_y, pos_x)
+                        self.game.remove_node(pos_y, pos_x)
                         pygame.draw.rect(self.display, self.white,
                                          pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
@@ -416,7 +416,7 @@ class Display:  # Zu Display ändern
                         if event.button == 1:
                             self.manipulate_point(pos_x, pos_y)
                             self.show_board()
-                            # self.game.add_point(nodeX, nodeY)
+                            # self.game.add_node(nodeX, nodeY)
                         if event.button == 3:
                             mid_x = self.window_x // 2
                             mid_y = self.window_y // 2
@@ -438,7 +438,7 @@ class Display:  # Zu Display ändern
                                     self.game.next_board()
                                     self.input_iterations.change_text(str(iteration))
                                     self.draw_menu()
-                                    points = self.game.get_points()
+                                    points = self.game.get_nodes()
                                     self.show_board(points)
                                 self.input_iterations.change_text('')
                                 self.play_but.change_state()
@@ -457,21 +457,21 @@ class Display:  # Zu Display ändern
                         self.open_menu()
                     if event.key == pygame.K_RIGHT:
                         self.next_premade()
-                        # points = self.game.get_points()
+                        # points = self.game.get_nodes()
                         # self.show_board(points)
                         self.draw_menu()
                     if event.key == pygame.K_LEFT:
                         self.previous_premade()
-                        points = self.game.get_points()
+                        points = self.game.get_nodes()
                         self.show_board(points)
                         self.draw_menu()
                     if event.key == pygame.K_p:
                         self.change_place_mode()
-                        # points = self.game.get_points()
+                        # points = self.game.get_nodes()
                         # self.show_board(points)
                         self.draw_menu()
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
-                        # points = self.game.get_points()
+                        # points = self.game.get_nodes()
                         # for point in points:
                         #     point[0] -= self.verschiebung_ges[0]
                         #     point[1] -= self.verschiebung_ges[1]
@@ -501,7 +501,7 @@ class Display:  # Zu Display ändern
         """
         self.verschiebung_ges[0] += verschiebung_x
         self.verschiebung_ges[1] += verschiebung_y
-        points = self.game.get_points()
+        points = self.game.get_nodes()
         for point in points:
             point[0] += verschiebung_x
             point[1] += verschiebung_y
@@ -520,12 +520,12 @@ class Display:  # Zu Display ändern
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
                     if self.curr_place_mode == "draw":
-                        self.game.add_point(pos_y, pos_x)
+                        self.game.add_node(pos_y, pos_x)
                         pygame.draw.rect(self.display, self.black,
                                          pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
                     elif self.curr_place_mode == "erase":
-                        self.game.remove_point(pos_y, pos_x)
+                        self.game.remove_node(pos_y, pos_x)
                         pygame.draw.rect(self.display, self.white,
                                          pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
@@ -552,7 +552,7 @@ class Display:  # Zu Display ändern
                     if event.key == pygame.K_ESCAPE:
                         self.spiel_verlassen()
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
-                        # points = self.game.get_points()
+                        # points = self.game.get_nodes()
                         # for point in points:
                         #     point[0] -= self.verschiebung_ges[0]
                         #     point[1] -= self.verschiebung_ges[1]
@@ -570,12 +570,12 @@ class Display:  # Zu Display ändern
                         self.show_board_verschoben(0, -10)
                     if event.key == pygame.K_RIGHT:
                         self.next_premade()
-                        # points = self.game.get_points()
+                        # points = self.game.get_nodes()
                         # self.show_board(points)
                         self.draw_menu()
                     if event.key == pygame.K_LEFT:
                         self.previous_premade()
-                        points = self.game.get_points()
+                        points = self.game.get_nodes()
                         self.show_board(points)
                         self.draw_menu()
                     if event.key == pygame.K_p:
@@ -595,7 +595,7 @@ class Display:  # Zu Display ändern
         """
         while True:
             stop = False
-            points = self.game.get_points()
+            points = self.game.get_nodes()
             self.show_board(points)
             self.draw_menu()
             self.update_board()
@@ -626,7 +626,7 @@ class Display:  # Zu Display ändern
         self.frage.grid(row=0, column=0, columnspan="2")
 
         self.quit_button_yes = Button(quit_box, text="Ja", bg="goldenrod", fg="black",
-                                      command=lambda: [self.save_file(self.game.get_points(), True)])
+                                      command=lambda: [self.save_file(self.game.get_nodes(), True)])
         self.quit_button_yes.grid(row=1, column=0, sticky='nesw', padx=5, pady=5)
         self.quit_button_no = Button(quit_box, bg="goldenrod", fg="black", text="Nein",
                                      command=lambda: [pygame.quit(), sys.exit()])
@@ -689,7 +689,7 @@ class Display:  # Zu Display ändern
             nodes.sort()
             # to_load = list(nodes for nodes, _ in itertools.groupby(nodes))
             to_load = [[node[0] + self.verschiebung_ges[0], node[1] + self.verschiebung_ges[1]] for node in nodes]
-            self.game.replace_points(to_load)
+            self.game.replace_nodes(to_load)
         self.show_board(to_load)
 
     def save_file(self, inhalt, schliessfrage):
