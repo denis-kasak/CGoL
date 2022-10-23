@@ -136,6 +136,7 @@ class Game:
         return self.nodes
 
     def manipulate_point(self, x_koord: int, y_koord: int) -> bool:
+
         """Siehe Kommentar.
 
         Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn
@@ -145,6 +146,7 @@ class Game:
         Besonders: Prueft ob Punkt in Knotenliste
         """
         if [x_koord, y_koord] in self.nodes:
+            # TODO ist in Coverage nicht eingetreten
             self.remove_point(x_koord, y_koord)
             res = False
         else:
@@ -293,12 +295,5 @@ def debug():
     """Debug Funktion."""
 
 
-def check_center():
-    """Testfunktion für das Speichern und Laden."""
-    test_pulse = [[0, 0], [1, 0], [1, 1]]
-    (Game.multirotate(4, test_pulse))
-
-
 if __name__ == '__main__':
-    # debug()
-    check_center()
+    debug()

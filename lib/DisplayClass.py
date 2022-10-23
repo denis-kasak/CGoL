@@ -1,14 +1,14 @@
-import pygame
-import sys
 import json
-from tkinter.filedialog import asksaveasfilename, askopenfile
-from tkinter import Button, Label, Tk, Entry
+import os
+import sys
 import time
-from backend import Game
+from tkinter import Button, Entry
+from tkinter.filedialog import asksaveasfilename, askopenfile
+import pygame
 import ButtonClass
 import InputClass
 from Projekt_Bedienungsanleitung import *
-import os
+from backend import Game
 
 
 class Display:  # Zu Display ändern
@@ -49,23 +49,6 @@ class Display:  # Zu Display ändern
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
         self.play_but = ButtonClass.ButtonPy(self.window_x + 10, 500, ['play', 'pause'])
         self.input_iterations = InputClass.Input(self.window_x + 10, 600, 100, 40, self.display, mode='int')
-
-    def __str__(self):
-        """Für Debugging (Infos etc.).
-
-        Kommentar: Gibt infos+stats über die Instanz aus.
-        Input: Name der Instanz
-        Output: Stats+Infos
-        Besonders: Keine Besonderheiten
-        """
-        nodes = self.game.get_points()
-        num_nodes = len(nodes)
-        res = f"Display(num_nodes={num_nodes})"
-        return res
-
-    def __repr__(self):
-        """Gibt alle werte der Instanz zurück."""
-        return self.__dict__
 
     def weltformnamefenster(self):
         """Fragt Name für benutzerdefiniertes Objekt ab.
@@ -174,32 +157,18 @@ class Display:  # Zu Display ändern
         pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
 
     def import_premade(self):
-        # TODO: Doku beenden
-        if new_premade := self.open_file():
-            if isinstance(new_premade, dict):
-                for key in list(new_premade.keys()):
-                    if isinstance(new_premade[key], list):
-                        for object in new_premade[key]:
-                            if isinstance(object, list):
-                                if len(object) == 2:
-                                    if isinstance(object[0], (int, float)) and isinstance(object[1], (int, float)):
-                                        pass
-                                    else:
-                                        return False
-                                else:
-                                    return False
-                            else:
-                                return False
-                    else:
-                        return False
-            else:
-                return False
-        else:
-            return False
-        old_premade = self.game.premade
-        merged = self.game.merge_dict(old_premade, new_premade)
-        self.game.premade = merged
-        return True
+        # TODO: fucking unübersichtlich
+        new_premade = self.open_file()
+        if new_premade and isinstance(new_premade, dict):
+            for key in list(new_premade.keys()):
+                if isinstance(new_premade[key], list):
+                    for kobject in new_premade[key]:
+                        if isinstance(kobject, list) and len(kobject) == 2 and isinstance(kobject[0],
+                                                                                          (int, float)) and isinstance(
+                            kobject[1], (int, float)):
+                            old_premade = self.game.premade
+                            merged = self.game.merge_dict(old_premade, new_premade)
+                            self.game.premade = merged
 
     def next_premade(self):
         """Geht zum nächsten Vorgefertigten Objekt.
@@ -271,19 +240,23 @@ class Display:  # Zu Display ändern
         self.save_button.grid(row=2, sticky=' nesw', padx=5, pady=5)
 
         self.save_as_premade_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt als Form speichern",
-                                             command=lambda: [self.fenster.destroy(),self.weltformnamefenster()])
+                                             command=lambda: [self.fenster.destroy(), self.weltformnamefenster()])
         self.save_as_premade_button.grid(row=3, sticky=' nesw', padx=5, pady=5)
 
-        self.load_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt laden", command=lambda: [self.open_saved_board()])
+        self.load_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt laden",
+                                  command=lambda: [self.open_saved_board()])
         self.load_button.grid(row=4, sticky=' nesw', padx=5, pady=5)
 
-        self.import_button = Button(self.fenster, bg="goldenrod", fg="black", text="Objekte laden", command=lambda: [self.import_premade()])
+        self.import_button = Button(self.fenster, bg="goldenrod", fg="black", text="Objekte laden",
+                                    command=lambda: [self.import_premade()])
         self.import_button.grid(row=5, sticky="nesw", padx=5, pady=5)
 
-        self.manual_button = Button(self.fenster, bg="goldenrod", fg="black", text="Anleitung", command=lambda:[self.fenster.destroy(), anleitung()])
+        self.manual_button = Button(self.fenster, bg="goldenrod", fg="black", text="Anleitung",
+                                    command=lambda: [self.fenster.destroy(), anleitung()])
         self.manual_button.grid(row=6, sticky=' nesw', padx=5, pady=5)
 
-        self.quit_button = Button(self.fenster, bg="goldenrod", fg="black", text="Spiel verlassen", command=lambda: self.spiel_verlassen())
+        self.quit_button = Button(self.fenster, bg="goldenrod", fg="black", text="Spiel verlassen",
+                                  command=lambda: self.spiel_verlassen())
         self.quit_button.grid(row=7, sticky=' nesw', padx=5, pady=5)
 
         self.fenster.grid_columnconfigure(0, weight=1)
@@ -655,7 +628,8 @@ class Display:  # Zu Display ändern
         self.quit_button_yes = Button(quit_box, text="Ja", bg="goldenrod", fg="black",
                                       command=lambda: [self.save_file(self.game.get_points(), True)])
         self.quit_button_yes.grid(row=1, column=0, sticky='nesw', padx=5, pady=5)
-        self.quit_button_no = Button(quit_box, bg="goldenrod", fg="black", text="Nein", command=lambda: [pygame.quit(), sys.exit()])
+        self.quit_button_no = Button(quit_box, bg="goldenrod", fg="black", text="Nein",
+                                     command=lambda: [pygame.quit(), sys.exit()])
         self.quit_button_no.grid(row=1, column=1, sticky='nesw', padx=5, pady=5)
         quit_box.grid_rowconfigure(0, weight=1)
         quit_box.grid_rowconfigure(1, weight=3)
