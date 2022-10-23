@@ -247,10 +247,10 @@ class Game:
         return intersect
 
     @classmethod
-    def remove_duplicates(cls, liste):
+    def remove_duplicates(cls, nodes):
         res = set()
-        for punkt in liste:
-            res.add((punkt[0], punkt[1]))
+        for node in nodes:
+            res.add((node[0], node[1]))
         res = list(res)
         out = [[punkt[0], punkt[1]] for punkt in res]
         return out
