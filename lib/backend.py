@@ -57,25 +57,22 @@ class Game:
         Besonders: nutzt check_regeln
         """
         new_board = []
-        nachbarn = []
         nodes = self.get_points()
         for node in nodes:
             x_koord = node[0]
             y_koord = node[1]
-            numneighbors = self.get_num_neighbours(x_koord, y_koord)
-
+            numneighbours = 0
             nachbar_zellen = [[x_koord - 1, y_koord - 1], [x_koord - 1, y_koord],
                               [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
                               [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
                               [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
             for zelle in nachbar_zellen:
-                if zelle not in nachbarn + nodes:
-                    nachbarn.append(zelle)
-            if node not in new_board and numneighbors in [2, 3]:
+                if zelle in nodes:
+                    numneighbours += 1
+                elif zelle not in new_board + nodes and self.get_num_neighbours(zelle[0], zelle[1]) == 3: 
+                    new_board.append(zelle)
+            if node not in new_board and numneighbours in [2, 3]:
                 new_board.append(node)
-        for nachbar in nachbarn:  # loop durch nachbarn
-            if nachbar not in new_board and self.get_num_neighbours(nachbar[0], nachbar[1]) == 3:
-                new_board.append(nachbar)
         self.replace_points(new_board)
         self.iterations += 1
         return new_board
