@@ -447,7 +447,7 @@ class Display:  # Zu Display ändern
                     # Keypress event listener
                     if event.key == pygame.K_f:
                         # TODO: entfernen, geht zur nächsten Generation
-                        return None
+                        return
                     if event.key == pygame.K_ESCAPE:
                         self.spiel_verlassen()
                         # Escape -> Close
@@ -606,7 +606,7 @@ class Display:  # Zu Display ändern
             if stop is False:
                 self.game.next_board()
             self.check_close()
-            self.check_close()
+            #self.check_close()
 
     def spiel_verlassen(self):
         quit_box = Tk()
@@ -646,11 +646,8 @@ class Display:  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 self.spiel_verlassen()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.spiel_verlassen()
 
     @classmethod
     def update_board(cls):
