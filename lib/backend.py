@@ -29,7 +29,7 @@ class Game:
             self.premade = {}
             self.premade = self.import_premade()
 
-    def get_num_neighbours(self, x_koord: int, y_koord: int) -> int:
+    def get_num_neighbours(self, node) -> int:
         # NOTE: Aufruf 5403x in denis.json welt. Optimierung?
         """Gibt die Anzahl der Nachbarn zurück.
 
@@ -38,14 +38,24 @@ class Game:
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        nachbar_zellen = [[x_koord - 1, y_koord - 1], [x_koord - 1, y_koord],
-                          [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
-                          [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
-                          [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
+        nachbar_zellen = self.get_neighbours(node)
         # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
         #  und self.nodes (Knotenliste)
         num_nachbarn = len(Game.get_list_intersection(nachbar_zellen, self.nodes))  # noqa: E501
         return num_nachbarn
+
+    def get_neighbours(self, node):
+        """Gibt eine Liste aller Nachbarn zurück.
+
+        Kommentar: gibt die benachbarten Zellen als Koordinaten in einer Liste aus
+        Input: Name der Instanz, Zellkoordinaten
+        Output: Liste aller benachbarten Zellen
+        Besonders: keine Besonderheiten
+        """
+        return [[node[0] - 1, node[1] - 1], [node[0] - 1, node[1]],
+                [node[0] - 1, node[1] + 1], [node[0], node[1] - 1],
+                [node[0], node[1] + 1], [node[0] + 1, node[1] - 1],
+                [node[0] + 1, node[1]], [node[0] + 1, node[1] + 1]]
 
     def next_board(self) -> list:
         # OPTIMIZE: Aufruf von self.check_regeln optimieren
@@ -59,17 +69,11 @@ class Game:
         new_board = []
         nodes = self.get_points()
         for node in nodes:
-            x_koord = node[0]
-            y_koord = node[1]
             numneighbours = 0
-            nachbar_zellen = [[x_koord - 1, y_koord - 1], [x_koord - 1, y_koord],
-                              [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
-                              [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
-                              [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
-            for zelle in nachbar_zellen:
+            for zelle in self.get_neighbours(node):
                 if zelle in nodes:
                     numneighbours += 1
-                elif zelle not in new_board + nodes and self.get_num_neighbours(zelle[0], zelle[1]) == 3: 
+                elif zelle not in new_board + nodes and self.get_num_neighbours(zelle) == 3: 
                     new_board.append(zelle)
             if node not in new_board and numneighbours in [2, 3]:
                 new_board.append(node)
