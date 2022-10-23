@@ -455,7 +455,7 @@ class Display:  # Zu Display ändern
                             self.play_but.change_state()
                             self.draw_menu()
                         if self.input_iterations.rect.collidepoint(pos_y, pos_x):
-                            if self.input_iterations.change_state() == True:
+                            if self.input_iterations.change_state():
                                 iterations = int(self.input_iterations.text)
                                 self.play_but.change_state()
                                 self.draw_menu()

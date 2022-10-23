@@ -71,17 +71,18 @@ class Input:
         while self.active:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKSPACE:
-                        self.change_text(self.text[:-1])
-                    elif event.key == pygame.K_ESCAPE:
-                        self.change_text('')
-                        self.change_state()
-                    elif event.key == pygame.K_RETURN:
-                        self.change_state()
-                        return True
-                    else:
-                        if event.unicode.isnumeric() or self.mode != 'int':
-                            self.change_text(self.text + event.unicode)
+                    match event.key:
+                        case pygame.K_BACKSPACE:
+                            self.change_text(self.text[:-1])
+                        case pygame.K_ESCAPE:
+                            self.change_text('')
+                            self.change_state()
+                        case pygame.K_RETURN:
+                            self.change_state()
+                            return True
+                        case _:  # default
+                            if event.unicode.isnumeric() or self.mode != 'int':
+                                self.change_text(self.text + event.unicode)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
