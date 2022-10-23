@@ -38,9 +38,8 @@ class Game:
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
-        #  und self.nodes (Knotenliste)
-        return len(list(filter(lambda x:x in self.get_neighbours(node), self.nodes)))
+        intersect = [item for item in self.get_neighbours(node) if item in self.nodes]
+        return len(intersect)
 
     def get_neighbours(self, node):
         """Gibt eine Liste aller Nachbarn zurück.
